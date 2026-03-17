@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ContextPill</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <h1>💊 ContextPill</h1>
+        <label class="toggle-row" for="enabledToggle">
+          <span>Inject on supported sites</span>
+          <input id="enabledToggle" type="checkbox" />
+        </label>
+      </header>
+
+      <section class="form">
+        <label>
+          Who you are
+          <textarea id="who" rows="2" placeholder="e.g. Product designer + indie builder"></textarea>
+        </label>
+
+        <label>
+          Goals
+          <textarea id="goals" rows="2" placeholder="e.g. Ship MVP in 6 weeks"></textarea>
+        </label>
+
+        <label>
+          Projects
+          <textarea id="projects" rows="2" placeholder="e.g. ContextPill browser extension"></textarea>
+        </label>
+
+        <label>
+          Skills
+          <textarea id="skills" rows="2" placeholder="e.g. UX writing, React, growth"></textarea>
+        </label>
+
+        <label>
+          Response style
+          <textarea id="style" rows="2" placeholder="e.g. concise, practical, step-by-step"></textarea>
+        </label>
+      </section>
+
+      <footer class="actions">
+        <button id="saveBtn" class="primary" type="button">Save Pill</button>
+        <button id="resetBtn" type="button">Reset Pill</button>
+      </footer>
+
+      <p id="status" class="status" aria-live="polite"></p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
