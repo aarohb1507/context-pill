@@ -33,6 +33,13 @@ function setTextareaWithReactNativeSetter(textarea, value) {
   textarea.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
+function setContentEditableText(editable, value) {
+  editable.focus();
+  editable.textContent = value;
+  editable.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: value }));
+  editable.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
 function injectClaude(text) {
   const editor = document.querySelector('[data-prosemirror-editor]') || document.querySelector('.ProseMirror[contenteditable="true"]') || document.querySelector('[contenteditable="true"]');
   if (!editor) {
@@ -46,12 +53,7 @@ function injectClaude(text) {
   }
 
   const finalText = existing ? `${text}${existing}` : text;
-  const ok = document.execCommand("insertText", false, finalText);
-
-  if (!ok) {
-    editor.textContent = finalText;
-    editor.dispatchEvent(new Event("input", { bubbles: true }));
-  }
+  setContentEditableText(editor, finalText);
 
   return true;
 }
@@ -113,13 +115,37 @@ function injectDeepSeek(text) {
   }
 
   const next = current ? `${text}${current}` : text;
-  editable.focus();
-  const inserted = document.execCommand("insertText", false, next);
-  if (!inserted) {
-    editable.textContent = next;
-    editable.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: next }));
-    editable.dispatchEvent(new Event("change", { bubbles: true }));
+  setContentEditableText(editable, next);
+  return true;
+}
+
+function injectGemini(text) {
+  const textarea = document.querySelector('textarea[aria-label*="prompt" i], textarea[placeholder*="prompt" i], textarea');
+  if (textarea) {
+    const current = textarea.value || "";
+    if (!current.includes(MARKER)) {
+      const next = current ? `${text}${current}` : text;
+      setTextareaWithReactNativeSetter(textarea, next);
+    }
+    return true;
   }
+
+  const editable = 
+    document.querySelector('rich-textarea [contenteditable="true"]') ||
+    document.querySelector('div[contenteditable="true"][role="textbox"]') ||
+    document.querySelector('div[aria-label*="prompt" i][contenteditable="true"]') ||
+    document.querySelector('[contenteditable="true"]');
+  if (!editable) {
+    return false;
+  }
+
+  const current = editable.innerText || editable.textContent || "";
+  if (current.includes(MARKER)) {
+    return true;
+  }
+
+  const next = current ? `${text}${current}` : text;
+  setContentEditableText(editable, next);
   return true;
 }
 
@@ -128,6 +154,7 @@ function getInjectorForHost(hostname) {
   if (hostname.includes("chatgpt.com")) return injectChatGPT;
   if (hostname.includes("grok.com")) return injectGrok;
   if (hostname.includes("deepseek.com")) return injectDeepSeek;
+  if (hostname.includes("gemini.google.com")) return injectGemini;
   return null;
 }
 

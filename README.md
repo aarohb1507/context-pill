@@ -6,7 +6,7 @@ Build your profile once. Every model knows you instantly.
 ## What it does
 
 - Stores your personal context pill (who you are, goals, projects, skills, style)
-- Injects it automatically into Claude, ChatGPT, Grok, and DeepSeek when toggled ON
+- Injects it automatically into Claude, ChatGPT, Grok, Gemini, and DeepSeek when toggled ON
 - Toggle OFF for a clean session anytime
 - Edit or reset your pill whenever you want
 - 100% local — nothing leaves your browser
@@ -18,6 +18,7 @@ Build your profile once. Every model knows you instantly.
 | claude.ai | ProseMirror `execCommand` injection |
 | chatgpt.com | React native setter + `input` event |
 | grok.com | Direct textarea value + `input` event |
+| gemini.google.com | Textarea / contenteditable fallback |
 | deepseek.com (+ subdomains) | Textarea / contenteditable fallback |
 
 ## Project structure
@@ -75,6 +76,7 @@ function getInjectorForHost(hostname) {
   if (hostname.includes("chatgpt.com")) return injectChatGPT;
   if (hostname.includes("grok.com")) return injectGrok;
   if (hostname.includes("deepseek.com")) return injectDeepSeek;
+  if (hostname.includes("gemini.google.com")) return injectGemini;
   return null;
 }
 ```
